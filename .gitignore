@@ -1,0 +1,9 @@
+tmp*.txt
+__pycache__
+checkpoint.pth.tar
+.vscode
+*.tar
+results/*
+*.etcd/
+etcd.ready.txt
+server_ready.txt

@@ -1,0 +1,36 @@
+# dcserver config
+name: "" # optional
+node: "127.0.0.1"
+uuid: "" # optional
+
+logpath: ""
+
+# optional, cluster info
+cluster: ""
+gossipport: 18282
+clusterinfo_refresh_interval: 1000 # ms
+
+# port settings
+restport: 18283
+restadminport: 18285
+rpcport: 18284
+
+# for dev
+debug: false
+enableadmin: false
+
+# data path config
+dcserver_data_path: "/path/to/cifar10/or/imagenet/train"
+dcserver_data_path: "/data/cifar10/train"
+
+# cache
+cache_ratio: 0.2    # total cache ratio of original dataset
+cache_type: "lru"  # 'lru' | 'isa' | 'coordl' | 'quiver'
+
+# isa relate
+# us_ratio: 0.1 # percentage of total cache size
+async_building_task: 300 # building task num
+package_design: true     # whether open dynamic packaging
+loading_cache_size: 450  # loading cache size
+
+etcd_nodes: "ip1,ip2"

@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+/*
+    protoc \
+    --go_out=Mgrpc/service_config/service_config.proto=/internal/proto/grpc_service_config:.\
+    --go-grpc_out=Mgrpc/service_config/service_config.proto=/internal/proto/grpc_service_config:.\
+    --go_opt=paths=source_relative \
+    --go-grpc_opt=paths=source_relative \
+    deepcache.proto
+
+    python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. deepcache.proto
+ */
+
+option go_package = "./;cache";
+
+package rpc;
+
+service Operator {
+  rpc DCSubmit(DCRequest) returns (DCReply) {}
+}
+
+enum OpType {
+  // dc oprations
+  get_cache_info = 0;     // cache info op
+  readimg_byidx = 1;      // reading by index op
+  update_ivpersample = 2; // update important value op
+  readimg_byidx_t = 3;    // reading by index_tuple, (imgidx, 1/0), for isa
+  refresh_server_ivpsample = 4; // refresh server ivpersample
+}
+
+message DCRequest {
+  int64 id = 1;           // id
+  OpType type = 2;        // op
+  int64 imgidx = 3;       // image index
+  string kvlist_json = 4; // kvlist for update_ivpersample
+  string imgidx_t = 5;    // imgidx_t for readimg_byidx_t
+  bool full_access = 6; // if access all data in this epoch
+}
+
+message DCReply {
+  int64 id = 1; // id
+  // !important, data should not contains data longer than 2^32 (4GB)
+  bytes data = 2;       // binary
+  int64 len = 3;        // data length
+  string msg = 4;       // string
+  int64 clsidx = 5;     // clsidx
+  int64 imgidx = 6;     // imgidx
+  int64 cache_size = 7; // cache_size
+  int64 nsamples = 8;   // nsamples
+  bool is_hit = 9; // cache hit or not, used to tell if using "pil cache" to accelerate bytes2pil
+}
